@@ -1,0 +1,35 @@
+h2 {
+  font-weight: 600;
+  font-size: 2rem; /* Adjusted font size for the title */
+}
+
+.category-btn {
+  font-weight: 500;
+  font-size: 1.1rem; /* Slightly reduced font size for category buttons */
+  text-align: left;
+  border: 1px solid #ddd; /* Optional border for more subtle styling */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for long text on smaller screens */
+}
+
+@media (max-width: 576px) {
+  .category-btn {
+    font-size: 1rem; /* Slightly smaller font on mobile for better fit */
+    padding: 0.75rem; /* Reduce padding on mobile devices */
+  }
+  
+  h2 {
+    font-size: 1.75rem; /* Adjust title size for small devices */
+  }
+}
+
+@media (min-width: 768px) {
+  .category-btn {
+    font-size: 1.1rem; /* Larger size on tablets and above */
+  }
+
+  h2 {
+    font-size: 2.25rem; /* Adjust title size for larger screens */
+  }
+}
