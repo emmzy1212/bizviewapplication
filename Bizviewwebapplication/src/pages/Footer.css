@@ -1,0 +1,141 @@
+/* General footer styles */
+.footerStyle {
+  background-color: #C9EDDC;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 40px;
+  box-sizing: border-box; /* Ensures padding doesn't break the layout */
+}
+
+/* Container inside the footer */
+.containerStyle {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 55px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  width: 100%; /* Ensure container takes full width */
+  padding: 0 20px;
+  gap: 20px; /* Adds space between sections */
+  box-sizing: border-box;
+}
+
+/* Each section in the footer */
+.sectionStyle {
+  flex: 1 1 250px; /* Flexible basis with a minimum width */
+  text-align: left;
+  font-size: 15px;
+  margin: 10px;
+}
+
+/* Footer list styles */
+.listStyle {
+  list-style: none;
+  padding: 0;
+  color: rgb(87, 86, 86);
+  margin: 0;
+}
+
+.sectionStyle ul li {
+  margin-bottom: 8px; 
+  font-size: 16px;
+}
+
+.footerStyle p {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+/* Heading styles */
+h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+/* Dropdown style */
+.dropdownStyle {
+  width: 100%;
+  max-width: 150px; /* Prevent dropdowns from stretching */
+  padding: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+ 
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Media query for tablets and small screens */
+@media (max-width: 1024px) {
+  .footerStyle {
+      font-size: 18px;
+  }
+
+  .containerStyle {
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+  }
+
+  .sectionStyle {
+      text-align: center;
+      flex: 1 1 100%; /* Ensure sections take full width on smaller screens */
+  }
+
+  h3 {
+      font-size: 18px;
+  }
+
+  .sectionStyle ul li {
+      font-size: 14px;
+  }
+
+  .dropdownStyle {
+      font-size: 13px;
+  }
+}
+
+/* Media query for mobile screens */
+@media (max-width: 768px) {
+  .sectionStyle ul li {
+      font-size: 13px;
+      margin-bottom: 5px;
+  }
+
+  h3 {
+      font-size: 16px;
+  }
+
+  .dropdownStyle {
+      font-size: 12px;
+      width: 100px;
+  }
+}
+
+/* Media query for extra small screens */
+@media (max-width: 480px) {
+  .footerStyle {
+      padding: 20px;
+  }
+
+  .sectionStyle ul li {
+      font-size: 12px;
+  }
+
+  h3 {
+      font-size: 14px;
+  }
+
+  .dropdownStyle {
+      font-size: 11px;
+      width: 80px;
+  }
+}

@@ -1,0 +1,26 @@
+.feedback-text {
+    font-size: 14px;
+    color: #999;
+    margin-top: 10px; /* Keep spacing between the main content and feedback text */
+    margin-left: 10px; /* Same alignment as before */
+  }
+  
+  .feedback-link {
+    color: #007bff;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .feedback-text {
+      font-size: 12px; /* Adjust font size for smaller devices */
+      margin-left: 5px; /* Reduce margin for smaller devices */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .feedback-text {
+      font-size: 10px; /* Further adjust font size for extra small devices */
+      margin-left: 2px; /* Further reduce margin */
+    }
+  }
+  
