@@ -1,5 +1,8 @@
+
+
 import mongoose from "mongoose";
-import bcrypt from 'bcryptjs';
+// ❌ Remove bcrypt import since we're not using it
+// import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   name: { type: String },
@@ -9,12 +12,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   password: {
-    type: String,
+    type: String, // Store plain text temporarily for debugging
     required: true,
   },
-  pic: {
-    type: String,
-  },
+  pic: { type: String },
   phoneno: { type: String },
   address: { type: String },
   createAt: { type: Date, default: Date.now },
@@ -23,9 +24,7 @@ const userSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
 });
 
-
-
-// Method to hash password before saving
+/* ❌ Commented out password hashing for debugging
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
@@ -37,13 +36,12 @@ userSchema.pre('save', async function(next) {
     next(error);
   }
 });
+*/
 
-// Method to compare password
-userSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
+// ❌ Remove matchPassword method since we are not using bcrypt anymore
+// userSchema.methods.matchPassword = async function(enteredPassword) {
+//   return await bcrypt.compare(enteredPassword, this.password);
+// };
 
-
-// "User"  this is what is created as what we want to receive from our data base, which will change to lowercase in our mongodb as user to see the entered details filled
 const User = mongoose.model("User", userSchema);
 export default User;

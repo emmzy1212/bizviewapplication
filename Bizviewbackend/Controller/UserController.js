@@ -1,33 +1,35 @@
 import User from "../Model/UserModel.js";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Register User 
-// we use req to req from the body and res to receive responds
+// Register User
+
+
+const validatePassword = (password) => {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-])[A-Za-z\d!@#$%^&*()_+\-]{8,}$/;
+  return regex.test(password);
+};
+
+
+
+
+
 export const registerUser = async (req, res) => {
   try {
-    // Extract user input from the request body
-    const { email, password, confirmpassword } = req.body;
+    let { email, password, confirmpassword } = req.body;
 
-    // Check if any of the required fields are missing
     if (!email || !password || !confirmpassword) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if a user with the same email already exists
+    email = email.trim().toLowerCase(); // Trim spaces & lowercase email
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Function to validate the password's strength
-    const validatePassword = (password) => {
-      const regex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!.@#$%^&*()_+])[A-Za-z\d!@#$.%^&*()_+]{8,}$/;
-      return regex.test(password);
-    };
-
-    // Check if the password meets the required strength criteria
     if (!validatePassword(password)) {
       return res.status(400).json({
         message:
@@ -35,102 +37,79 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // Ensure that the password and confirm password match
     if (password !== confirmpassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    // Hash the password before storing it in the database
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user with the provided information
-    const newUser = await User.create({
-      email,
-      password: hashedPassword, // Store the hashed password
-    });
+    const newUser = new User({ email, password: hashedPassword });
+    await newUser.save();
 
-    // Respond with a success message and the newly created user data
-    return res.status(200).json({
+    return res.status(201).json({
       message: "User registered successfully",
-      data: newUser,
+      data: { id: newUser._id, email: newUser.email },
     });
   } catch (error) {
-    console.log(error)
-    // Handle any errors that occur during the process
-    return res.status(500).json({
-      message: "Error creating new user",
-      error: error.message,
-      
-    });
+    console.error("Error in registerUser:", error);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 };
 
 
+// login
 
-// ..................................
-// Login controller
+
 export const LoginUser = async (req, res) => {
-  const { password, email } = req.body;
-
-  // Validate input fields
-  if (!password || !email) {
-    return res.status(400).json({
-      message: "Please enter all required fields",
-    });
-  }
-// then we try to check if email exist
   try {
-    // Check if the user exists in the database
+    let { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please enter all required fields" });
+    }
+
+    email = email.trim().toLowerCase(); // Trim spaces & lowercase email
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({
-        message: "User not found. Please create an account",
-      });
+      return res.status(404).json({ message: "User not found. Please create an account" });
     }
 
-    // Compare the provided password with the stored hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Generate JWT token for the authenticated user
-    // this is what prints the token and expiration of the token
-    // after its get the token its will send it to our middleware verifyjwt to verify it
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET, // Use the secret from environment variables
-      { expiresIn: "1h" } // Token expires in 1 hour
-    );
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is missing from environment variables.");
+      return res.status(500).json({ message: "Server error. Please try again later." });
+    }
 
-    // Set the token in an HTTP-only cookie
-    // where i also handled the cookies
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Only send cookies over HTTPS in production
-        sameSite: 'Strict', // Adjust depending on your needs ('Strict', 'Lax', or 'None')
-        maxAge: 3600000, // 1 hour
-      });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-    // Respond with success message and user information (excluding password)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 3600000, // 1 hour
+    });
+
     return res.status(200).json({
       message: "Login successful",
       user: {
         id: user._id,
-        username: user.username,
         email: user.email,
       },
+      token, // Send token in response if needed for frontend auth
     });
   } catch (error) {
-    // Handle any errors that occur during the process
-    return res.status(500).json({
-      message: "Internal server error. Unable to log in",
-      error: error.message,
-    });
+    console.error("Error in loginUser:", error);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 };
+
+
+
 
 
 
