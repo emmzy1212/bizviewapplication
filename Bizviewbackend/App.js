@@ -12,8 +12,16 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Use environment variable or default to 3000
 
 // CORS configuration
+// const corsOptions = {
+//   origin: 'http://localhost:3000', // Replace with your frontend origin
+//   methods: 'GET, POST, PUT, DELETE, OPTIONS',
+//   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+//   credentials: true, // Allow credentials
+// };
+
+// CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000', // Replace with your frontend origin
+  origin: ['http://localhost:3000', 'https://bizviewapplication.vercel.app'], // Allow multiple origins
   methods: 'GET, POST, PUT, DELETE, OPTIONS',
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
   credentials: true, // Allow credentials
